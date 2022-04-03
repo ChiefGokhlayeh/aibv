@@ -39,5 +39,9 @@
 
   "postCreateCommand": "pre-commit install && nbstripout install",
 
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+
+  "remoteEnv": {
+    "GIT_EDITOR": "vim"
+  }
 }
