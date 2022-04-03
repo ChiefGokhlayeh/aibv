@@ -1,0 +1,43 @@
+{
+  "name": "Miniconda (Python 3)",
+  "build": {
+    "context": "..",
+    "dockerfile": "Dockerfile"
+  },
+
+  "settings": {
+    "python.defaultInterpreterPath": "/opt/conda/bin/python",
+    "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+    "python.formatting.provider": "black",
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8"
+  },
+
+  "runArgs": [
+    "--device=/dev/video0",
+    "--group-add=986", // workaround for non-root remoteUser: add user to "video" group
+    "--gpus=all"
+  ],
+
+  "features": {
+    "desktop-lite": {
+      "password": "vscode",
+      "webPort": "6080",
+      "vncPort": "5901"
+    }
+  },
+
+  "extensions": [
+    "bungcip.better-toml",
+    "davidanson.vscode-markdownlint",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "ms-python.vscode-pylance"
+  ],
+
+  "postCreateCommand": "pre-commit install && nbstripout install",
+
+  "remoteUser": "vscode"
+}
