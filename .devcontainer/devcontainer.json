@@ -1,47 +1,49 @@
 {
-  "name": "Miniconda (Python 3)",
-  "build": {
-    "context": "..",
-    "dockerfile": "Dockerfile"
-  },
+    "name": "Miniconda (Python 3)",
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile"
+    },
 
-  "settings": {
-    "python.defaultInterpreterPath": "/opt/conda/bin/python",
-    "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
-    "python.formatting.provider": "black",
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8"
-  },
+    "settings": {
+        "python.defaultInterpreterPath": "/opt/conda/bin/python",
+        "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+        "python.formatting.provider": "black",
+        "python.linting.enabled": true,
+        "python.linting.flake8Enabled": true,
+        "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
+        "latex-workshop.docker.enabled": false
+    },
 
-  "runArgs": [
-    "--gpus=all",
-    "--group-add=986", // workaround for non-root remoteUser: add user to "video" group
-    "--privileged"
-  ],
+    "runArgs": [
+        "--gpus=all",
+        "--group-add=986", // workaround for non-root remoteUser: add user to "video" group
+        "--privileged"
+    ],
 
-  "features": {
-    "desktop-lite": {
-      "password": "vscode",
-      "webPort": "6080",
-      "vncPort": "5901"
+    "features": {
+        "desktop-lite": {
+            "password": "vscode",
+            "webPort": "6080",
+            "vncPort": "5901"
+        }
+    },
+
+    "extensions": [
+        "bungcip.better-toml",
+        "davidanson.vscode-markdownlint",
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "James-Yu.latex-workshop",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+    ],
+
+    "postCreateCommand": "pre-commit install && nbstripout install",
+
+    "remoteUser": "vscode",
+
+    "remoteEnv": {
+        "GIT_EDITOR": "vim"
     }
-  },
-
-  "extensions": [
-    "bungcip.better-toml",
-    "davidanson.vscode-markdownlint",
-    "eamodio.gitlens",
-    "esbenp.prettier-vscode",
-    "ms-python.python",
-    "ms-python.vscode-pylance"
-  ],
-
-  "postCreateCommand": "pre-commit install && nbstripout install",
-
-  "remoteUser": "vscode",
-
-  "remoteEnv": {
-    "GIT_EDITOR": "vim"
-  }
 }

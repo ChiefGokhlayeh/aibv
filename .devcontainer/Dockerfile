@@ -12,6 +12,10 @@ RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then \
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
     git-lfs \
+    libfile-homedir-perl \
+    liblog-dispatch-perl \
+    libyaml-tiny-perl \
+    texlive-full \
     vim \
     zsh \
     && rm -rf /var/lib/apt/lists/*

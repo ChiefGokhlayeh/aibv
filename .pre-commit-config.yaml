@@ -1,31 +1,31 @@
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
-    hooks:
-      - id: check-merge-conflict
-      - id: check-yaml
-      - id: detect-private-key
-      - id: end-of-file-fixer
-        exclude: '.*\.ipynb'
-      - id: trailing-whitespace
-  - repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
-    rev: v0.1.0
-    hooks:
-      - id: dockerfilelint
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.6.2
-    hooks:
-      - id: prettier
-        args:
-          - --config-precedence=file-override
-        additional_dependencies:
-          - prettier@2.6.2
-          - prettier-plugin-toml@0.3.1
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.5.0
-    hooks:
-      - id: nbstripout
-  - repo: meta
-    hooks:
-      - id: check-hooks-apply
-      - id: check-useless-excludes
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.1.0
+      hooks:
+          - id: check-merge-conflict
+          - id: check-yaml
+          - id: detect-private-key
+          - id: end-of-file-fixer
+            exclude: '.*\.ipynb'
+          - id: trailing-whitespace
+    - repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
+      rev: v0.1.0
+      hooks:
+          - id: dockerfilelint
+    - repo: https://github.com/pre-commit/mirrors-prettier
+      rev: v2.6.2
+      hooks:
+          - id: prettier
+            args:
+                - --config-precedence=file-override
+            additional_dependencies:
+                - prettier@2.6.2
+                - prettier-plugin-toml@0.3.1
+    - repo: https://github.com/kynan/nbstripout
+      rev: 0.5.0
+      hooks:
+          - id: nbstripout
+    - repo: meta
+      hooks:
+          - id: check-hooks-apply
+          - id: check-useless-excludes
