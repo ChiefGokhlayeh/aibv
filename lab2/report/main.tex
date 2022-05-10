@@ -19,12 +19,15 @@
 \usepackage{setspace}
 \usepackage{makeidx}
 \usepackage{listings}
-\usepackage{natbib}
+\usepackage[style=iso-numeric,minnames=1,maxnames=3,giveninits,uniquename=init]{biblatex}
 \usepackage[ngerman,colorlinks=true]{hyperref}
 \usepackage{soul}
 \usepackage{hawstyle}
 \usepackage{lipsum} %% for sample text
 \usepackage{scrhack}
+
+%% add bib files
+\addbibresource{references.bib}
 
 %% define some colors
 \colorlet{BackgroundColor}{gray!20}
@@ -134,8 +137,7 @@
 
 \typeout{===== Section: literature}
 %% read the documentation for customizing the style
-\bibliographystyle{dinat}
-% \bibliography{references}
+\printbibliography{}
 
 % \typeout{===== Section: nomenclature}
 %% uncomment if a TOC entry is needed
