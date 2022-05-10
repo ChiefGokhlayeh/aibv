@@ -14,20 +14,31 @@
 \usepackage{libertine}
 \usepackage{pifont}
 \usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{subcaption}
 \usepackage{textcomp}
 \usepackage[german,refpage]{nomencl}
 \usepackage{setspace}
+\usepackage{siunitx}
 \usepackage{makeidx}
 \usepackage{listings}
 \usepackage[style=iso-numeric,minnames=1,maxnames=3,giveninits,uniquename=init]{biblatex}
 \usepackage[ngerman,colorlinks=true]{hyperref}
+\usepackage[ngerman]{cleveref}
 \usepackage{soul}
 \usepackage{hawstyle}
 \usepackage{lipsum} %% for sample text
 \usepackage{scrhack}
+\usepackage{xspace}
 
 %% add bib files
 \addbibresource{references.bib}
+
+%% define custom commands
+\newcommand{\defectcrack}{\texttt{crack}\xspace}
+\newcommand{\defectdarkarea}{\texttt{darkarea}\xspace}
+\newcommand{\defectfinger}{\texttt{finger}\xspace}
+\newcommand{\defectok}{\texttt{ok}\xspace}
 
 %% define some colors
 \colorlet{BackgroundColor}{gray!20}

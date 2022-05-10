@@ -2,6 +2,10 @@
     "ltex.language": "de-DE",
     "ltex.latex.commands": {
         "\\DeclareRobustCommand{}{}": "ignore",
+        "\\defectcrack{}": "dummy",
+        "\\defectdarkarea{}": "dummy",
+        "\\defectfinger{}": "dummy",
+        "\\defectok{}": "vowelDummy",
         "\\HAWThesisProperties{}": "ignore",
         "\\lstset{}": "ignore",
         "\\typeout{}": "ignore"

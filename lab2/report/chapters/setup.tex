@@ -1,3 +1,56 @@
 \chapter{Versuchsaufbau}
 
-\lipsum
+\section{Komponenten}
+
+Als Teil der Beschreibung zum Versuchsaufbau soll zunächst auf die verwendeten Komponenten verwiesen werden. Diese lauten:
+
+\begin{itemize}
+    \item Solarzellentester \emph{SolarCell EL-lab} des Unternehmens MBJ Solutions GmbH (siehe \cref{fig:cell_tester})
+    \item Vorgelabelter Datensatz mit Elektrolumineszenzbildern von Solarzellen
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/cell_tester.png}
+    \caption[SolarCell EL-lab Solarzellen Tester von MBJ Solutions GmbH.]{SolarCell EL-lab Solarzellen Tester von MBJ Solutions GmbH~\cite{mbj2022}.\label{fig:cell_tester}}
+\end{figure}
+
+Der Solarzellentester wird im ersten Laborabschnitt zur Aufnahme eigener Elektrolumineszenzbilder eingesetzt. Die Bildverarbeitungskette hingegen wird auf Basis vorgelabelter Bilder aus einem bereitgestellten Datensatz implementiert und trainiert. Dieser wird weiter unterteilt in einen Trainings- und einen Validationsdatensatz. Die Bilder sind in fünf Defektklassen aufgeteilt. Im Folgenden werden diese als \defectcrack{}, \defectdarkarea{}, \defectfinger{} und \defectok{} bezeichnet, wobei letztere Klasse ein Panel ohne relevante Mängel darstellt. \Cref{fig:example_defects} zeigt einen exemplarischen Auszug der verschiedenen Defektklassen und \cref{tbl:datasets} listet die Anzahl Bilder je Defektklasse.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.245\textwidth}
+        \includegraphics[width=\textwidth]{images/example_crack.jpg}
+        \caption{\defectcrack{}}
+    \end{subfigure}
+    \begin{subfigure}{0.245\textwidth}
+        \includegraphics[width=\textwidth]{images/example_darkarea.jpg}
+        \caption{\defectdarkarea{}}
+    \end{subfigure}
+    \begin{subfigure}{0.245\textwidth}
+        \includegraphics[width=\textwidth]{images/example_finger.jpg}
+        \caption{\defectfinger{}}
+    \end{subfigure}
+    \begin{subfigure}{0.245\textwidth}
+        \includegraphics[width=\textwidth]{images/example_ok.jpg}
+        \caption{\defectok{}}
+    \end{subfigure}
+    \caption{Exempel aus den Defektklassen.\label{fig:example_defects}}
+\end{figure}
+
+\begin{table}
+    \centering
+    \caption{Anzahl Exempel der jeweiligen Defektklassen in den beiden Datensätzen.\label{tbl:datasets}}
+    \begin{tabular}{l r r r r}
+        \toprule
+                         & \defectcrack{} & \defectdarkarea{} & \defectfinger{} & \defectok{} \\
+        \midrule
+        Trainingsdaten   & 15             & 74                & 19              & 125         \\
+        Validationsdaten & 6              & 32                & 8               & 51          \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Einschränkungen}
+
+Eine händische Analyse der Bilder aus dem zur Verfügung gestellten Datensatz hat ergeben, dass sowohl Trainings- als auch Validationsdaten hohe Redundanzen aufweisen. Viele der Bilder zeigen das gleiche defekte Panel, jedoch mit leicht unterschiedlichen Helligkeitswerten. Dies ist vermutlich darauf rückzuführen, dass mehrere Aufnahmen vom gleichen Panel gemacht oder die gleiche Aufnahme mehrfach abgespeichert wurde. Stichproben zeigten sowohl binär identische Bilder, aber auch solche die einen leichten Positions- und Helligkeitsversatz aufwiesen.
