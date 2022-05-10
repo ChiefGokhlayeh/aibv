@@ -36,7 +36,8 @@
         "esbenp.prettier-vscode",
         "James-Yu.latex-workshop",
         "ms-python.python",
-        "ms-python.vscode-pylance"
+        "ms-python.vscode-pylance",
+        "valentjn.vscode-ltex"
     ],
 
     "postCreateCommand": "pre-commit install && nbstripout install",

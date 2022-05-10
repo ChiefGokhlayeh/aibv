@@ -1,0 +1,9 @@
+{
+    "ltex.language": "de-DE",
+    "ltex.latex.commands": {
+        "\\DeclareRobustCommand{}{}": "ignore",
+        "\\HAWThesisProperties{}": "ignore",
+        "\\lstset{}": "ignore",
+        "\\typeout{}": "ignore"
+    }
+}
