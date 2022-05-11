@@ -15,3 +15,196 @@ In~\cite{Köntges2014,Deitsch2018} werden einige typische Fehlerklassen beschrie
 Es liegt nahe, dass Dunkelstellen (\defectdarkarea{}) die größten Auswirkungen auf die Leistungsfähigkeit der Zelle haben. Bereich die während der Elektrolumineszenzprüfung nicht oder nur schwach aufleuchten, werden auch im späteren Betrieb nicht die gewünschte Leistung erbringen. Bruchstellen (\defectcrack{}), abgesehen von solchen die eine Busverbindungen trennen, haben zunächst keine nennenswerte Auswirkung auf die Leistungsfähigkeit. Sie können sich jedoch durch zyklische Temperaturwechsel während Nutzung der Zelle vergrößern und zu größeren Ausfällen führen~\cite{Deitsch2018}. Ausfälle von Teilen einzelner Finger (\defectfinger{}) haben laut~\cite{Köntges2014} keine größeren Auswirkungen auf Leistungsfähigkeit und Langlebigkeit, und werden als weniger problematisch angesehen.
 
 Ein hier nicht näher betrachteter Defekt steht im Zusammenhang mit Inhomogenitäten beim Brennen der Zelle. Diese führen zu weichgezeichneten Dunkelstellen ohne harte Kanten im mittleren Bereich der Zelle. Außerdem kann Stressbildung beim Löten zum Ausfall eines kompletten Fingers zwischen zwei Busverbindungen führen. Diese und weitere Defektklassen sind in~\cite{Köntges2014} näher beschrieben.
+
+\section{Automatisierte Optische Inspektion}
+
+Zum Zwecke der automatischen Inspektion der mittels Elektrolumineszenzprüfung gewonnenen Bilder bedarf es einer Fehlersegmentierung und anschließenden Klassifizierung in die genannten Defektklassen. Jedem Bild wird dabei nur eine einzelne Klasse zugeordnet. Eine Arbitrierung zwischen gleichzeitig auftretenden Defekten findet über das flächenmäßig größte erkannte Segment statt.
+
+Der grundlegende Aufbau der Bildverarbeitungskette ist in \cref{fig:overall_flow_chart} gezeigt. Da einige der Prozessschritte bereits vorbereitet waren, liegt der Fokus dieser Ausarbeitung auf den Blöcken \textbf{Segmentierung}, \textbf{Merkmalsextraktion}, \textbf{Training} und \textbf{Klassifikation}. Im Zuge des Labors wurden jeweils zwei Varianten für Segmentierung und Merkmalsextraktion implementiert. Auf diese wird im Folgenden näher eingegangen.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[
+        start/.style={
+                font=\small,
+                draw,
+                very thick,
+                shape=ellipse,
+                text depth=0.35ex,
+                inner sep=0.25cm,
+                align=center,
+                on chain,
+            },
+        end/.style={
+                start,
+                join,
+            },
+        process/.style={
+                draw,
+                very thick,
+                rounded corners,
+                text depth=0.35ex,
+                inner sep=0.25cm,
+                align=center,
+                on chain,
+                join,
+            },
+        provided/.style={
+                font=\small,
+            },
+        every join/.style={very thick, -{Stealth[]}},
+        ]
+        \begin{scope}[start chain=1 going below, node distance=5mm]
+            \node [start] {Start};
+            \node [process, provided] {Traningsbilder einlesen};
+            \node [process] {\textbf{Segmentierung}\\\small BLOBs der Defekte extrahieren};
+            \node [process] {\textbf{Merkmalsextraktion}\\\small Merkmale aus Segmenten extrahieren};
+            \node [process, provided] {Darstellung des Merkmalraums};
+            \node [process] {\textbf{Training}\\\small Erstellen des k-nearest Neighbor Raums};
+            \node [process, provided] {Validierungsbilder einlesen und segmentieren};
+            \node [process] {\textbf{Klassifikation}\\\small Bilder klassifizieren über k-nearest Neighbor};
+            \node [process, provided] {Bestimmung der Accuracy und Confusion Matrix};
+            \node [end] {Ende};
+        \end{scope}
+    \end{tikzpicture}
+    \caption{Grundlegender Aufbau der Bildverarbeitungskette.\label{fig:overall_flow_chart}}
+\end{figure}
+
+\subsection{Variante 1}
+
+\Cref{fig:variant_1} zeigt den schematischen Ablauf von Variante 1. Zunächst wird eine Überbelichtung des Grauwertbildes vorgenommen. Dabei dient das \(P_{70\%}\) Perzentil als neuer Maximalwert. Wie bei einer Überbelichtung üblich werden alle Werte über \(P_{70\%}\) bei \num{255} abgeschnitten. Als Nächstes findet eine Belichtungskorrektur statt. Diese basiert auf Beobachtungen aus Stichproben, bei denen die obere rechte Ecke stets etwas dunkler als die anderen schien. Dies stellte sich in der Laborvorbereitung als limitierender Faktor bei globaler Schwellwertbildung heraus. Als Korrektur wird eine gaußförmige Helligkeitsmatrix auf die obere Rechte Ecke addiert. Das so normierte Grauwertbild dient nun als Eingang für vier nachgelagerte Prozessschritte. Zum einen wird eine adaptive Schwellwertbildung durchgeführt, um lokale Dunkelstellen (Defekte, Schmutz und konstruktionsbedingte Strukturen) zu extrahieren. Letztere müssen noch vom so teil-segmentierten Binärbild abgezogen werden. Um Makrostrukturen wie Busleisten zu eliminieren wird eine Maske generiert. Dazu wird das normierte Grauwertbild zunächst mittels gaußscher Weichzeichnung tiefpassgefiltert. Anschließend wird eine \foreignlanguage{english}{Canny Edge-Detection} auf das Bild angewandt, mit der die Kanten an den Busleisten extrahiert werden. Durch Korrelation mit den \foreignlanguage{english}{Edge-Finder} Kernels
+%
+\begin{align*}
+    \boldsymbol{S}_{\mathrm{edge},\mathrm{vert}}^{\phantom{\intercal}} & = \left[\phantom{
+            \begin{matrix}
+                0      \\
+                \vdots \\
+                0      \\
+            \end{matrix}}
+        \right.\hspace{-0.5em}
+        \underbrace{\begin{matrix}
+                0 & \hdots & 0 \\
+                  & \vdots &   \\
+                0 & \hdots & 0 \\
+            \end{matrix}}_{N \times 15}
+        \quad\underbrace{\begin{matrix}
+                1 & \hdots & 1 \\
+                  & \vdots &   \\
+                1 & \hdots & 1 \\
+            \end{matrix}}_{N \times 15}
+        \quad\underbrace{\begin{matrix}
+                0 & \hdots & 0 \\
+                  & \vdots &   \\
+                0 & \hdots & 0 \\
+            \end{matrix}}_{N \times 15}
+        \hspace{-0.5em}
+        \left.\phantom{
+            \begin{matrix}
+                0      \\
+                \vdots \\
+                0      \\
+            \end{matrix}
+    }\right] \quad                                                     & N \times 45 {,}\                                                 & \text{und}        \\
+    \boldsymbol{S}_{\mathrm{edge},\mathrm{horz}}^{\phantom{\intercal}} & = \boldsymbol{S}_{\mathrm{edge},\mathrm{vert}}^{\intercal} \quad & 45 \times N {,} &
+\end{align*}
+%
+wobei \(N\) der Höhe bzw.\@ Breite des quadratischen Bildes entspricht, werden die Pixelkoordinaten vom linken, rechten, oberen und unteren Rand sowie den drei Versorgungsleisten extrahiert. Um diese wird nun die Bildmaske gelegt. Dies ermöglicht relativ robustes maskieren der Busleisten. Da die adaptive Schwellwertbildung nur eine lokale Grauwertverteilung berücksichtigt, gelangt auch Schmutz und Feinstrukturen in die Teilsegmentierung. Außerdem scheitert der lokale Ansatz an größeren Dunkelstellen (\defectdarkarea{}), was dazu führt, dass diese aus der Segmentierung fallen. Um dies zu verhindern wird eine globale Schwellwertbildung mit verhältnismäßig niedrigem Schwellwert angewandt. Die so erkannten \texttt{\foreignlanguage{english}{OFF}} Pixel werden dem Teilsegmentierung hinzugefügt. Gleiches wird mit einem verhältnismäßig hohen Schwellwert für \texttt{\foreignlanguage{english}{ON}} Pixel vorgenommen um Schmutzpartikel und andere Störungen von der Teilsegmentierung zu entfernen. Nach Kombination der Bildmasken mit dem teil-segmentierten Bild wird final eine Erodierung vertikaler Kanten durchgeführt. Dazu wird ein der Kernel \(\boldsymbol{S}_{\mathrm{erode},\mathrm{vert}} = {\left[ 1, 0, 1 \right]}\) der Form \(1 \times 3\) angewandt. Dieser entfernt dünne vertikale Linien zwischen den einzelnen Fingern. Übrig bleibt das segmentierte Binärbild.
+
+Als Merkmale dienen die Fläche, Ausrichtung, Umfang und Exzentrizität der Kontur.
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}[
+            start/.style={
+                    font=\small,
+                    draw,
+                    very thick,
+                    shape=ellipse,
+                    text depth=0.35ex,
+                    inner sep=0.25cm,
+                    on chain,
+                },
+            end/.style={
+                    start,
+                    join,
+                },
+            process_unjoined/.style={
+                    draw,
+                    very thick,
+                    rounded corners,
+                    text width=2.5cm,
+                    inner sep=0.25cm,
+                    align=center,
+                    on chain,
+                },
+            process/.style={
+                    process_unjoined,
+                    join,
+                },
+            connector/.style={very thick, -{Stealth[]}},
+            every join/.style={connector},
+            ]
+            \begin{scope}[start chain=trunk going below, node distance=5mm]
+                \node [start] {Start};
+                \node [process] {Überbelichtung};
+                \node (shading_process) [process] {Be\-lich\-tungs\-kor\-rek\-tur};
+                \node (adapt_process) [process] {Adaptive Schwellwertbildung};
+                \begin{scope}[start branch=canny going below]
+                    \node (canny_process) [process_unjoined, right=of adapt_process] {Bus\-leis\-ten-Erkennung mittels Can\-ny Edge-Detector};
+                    \node (bus_process) [process] {Maske: Busleisten};
+                \end{scope}
+                \begin{scope}[start branch=on going below]
+                    \node (on_process) [process_unjoined, right=of canny_process] {Maske: Schwellwertbildung der \texttt{ON} Pixel};
+                \end{scope}
+                \begin{scope}[start branch=off going below]
+                    \node (off_process) [process_unjoined, right=of on_process] {Maske: Schwellwertbildung der \texttt{OFF} Pixel};
+                \end{scope}
+                \path let \p{lowest}=(bus_process.south), \p{parent}=(adapt_process.south) in node (apply_process) [process] at (\x{parent}, \y{lowest}) {Anwendung der Bildmasken};
+                \node [process] {Erodierung vertikaler Kanten};
+                \node [end] {Ende};
+            \end{scope}
+            \draw [connector] (shading_process) -| (on_process);
+            \draw [connector] (shading_process) -| (off_process);
+            \draw [connector] (shading_process) -| (canny_process);
+            \draw [connector] (on_process) |- (apply_process);
+            \draw [connector] (off_process) |- (apply_process);
+            \draw [connector] (bus_process) |- (apply_process);
+        \end{tikzpicture}
+        \caption{Segmentierung \textbf{A}.\label{fig:segmentation_a}}
+    \end{subfigure}
+    \\
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}[
+                feature/.style={
+                        draw,
+                        very thick,
+                        text height=1.65ex,
+                        text depth=0.35ex,
+                        minimum width=2.5cm,
+                        inner sep=0.25cm,
+                    },
+            ]
+            \matrix [
+                matrix of nodes,
+                nodes={feature},
+                node distance=1cm,
+                row sep=0.25cm,
+                column sep=0.25cm
+            ] {
+                Fläche & Ausrichtung   \\
+                Umfang & Exzentrizität \\
+            };
+        \end{tikzpicture}
+        \caption{Merkmalsextraktion \textbf{A}.\label{fig:feature_extraction_a}}
+    \end{subfigure}
+    \caption{Segmentierung und Merkmale von Variante 1.\label{fig:variant_1}}
+\end{figure}
+
+\subsection{Variante 2}
+
+\subsection{Variante 3}
+
+\subsection{Variante 4}

@@ -23,6 +23,8 @@
 \usepackage{makeidx}
 \usepackage{listings}
 \usepackage[style=iso-numeric,minnames=1,maxnames=3,giveninits,uniquename=init]{biblatex}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage[ngerman,colorlinks=true]{hyperref}
 \usepackage[ngerman]{cleveref}
 \usepackage{soul}
@@ -30,9 +32,20 @@
 \usepackage{lipsum} %% for sample text
 \usepackage{scrhack}
 \usepackage{xspace}
+\usepackage{tikz}
 
 %% add bib files
 \addbibresource{references.bib}
+
+%% load tikz libraries
+\usetikzlibrary{
+  arrows.meta,
+  calc,
+  chains,
+  matrix,
+  positioning,
+  shapes.geometric,
+}
 
 %% define custom commands
 \newcommand{\defectcrack}{\texttt{crack}\xspace}
