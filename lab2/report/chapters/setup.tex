@@ -15,7 +15,7 @@ Als Teil der Beschreibung zum Versuchsaufbau soll zunächst auf die verwendeten 
     \caption[SolarCell EL-lab Solarzellen Tester von MBJ Solutions GmbH.]{SolarCell EL-lab Solarzellen Tester von MBJ Solutions GmbH~\cite{mbj2022}.\label{fig:cell_tester}}
 \end{figure}
 
-Der Solarzellentester wird im ersten Laborabschnitt zur Aufnahme eigener Elektrolumineszenzbilder eingesetzt. Die Bildverarbeitungskette hingegen wird auf Basis vorgelabelter Bilder aus einem bereitgestellten Datensatz implementiert und trainiert. Dieser wird weiter unterteilt in einen Trainings- und einen Validationsdatensatz. Die Bilder sind in fünf Defektklassen aufgeteilt. Im Folgenden werden diese als \defectcrack{}, \defectdarkarea{}, \defectfinger{} und \defectok{} bezeichnet, wobei letztere Klasse ein Panel ohne relevante Mängel darstellt. \Cref{fig:example_defects} zeigt einen exemplarischen Auszug der verschiedenen Defektklassen und \cref{tbl:datasets} listet die Anzahl Bilder je Defektklasse.
+Der Solarzellentester wird im ersten Laborabschnitt zur Aufnahme eigener Elektrolumineszenzbilder eingesetzt. Die Bildverarbeitungskette hingegen wird auf Basis vorgelabelter Bilder aus einem bereitgestellten Datensatz implementiert und trainiert. Dieser wird weiter unterteilt in einen Trainings- und einen Validationsdatensatz. Die Bilder sind in fünf Defektklassen aufgeteilt. Im Folgenden werden diese als \defectcrack{}, \defectdarkarea{}, \defectfinger{} und \defectok{} bezeichnet, wobei letztere Klasse eine Zelle ohne relevante Mängel darstellt. \Cref{fig:example_defects} zeigt einen exemplarischen Auszug der verschiedenen Defektklassen und \cref{tbl:datasets} listet die Anzahl Bilder je Defektklasse.
 
 \begin{figure}
     \centering
@@ -53,4 +53,4 @@ Der Solarzellentester wird im ersten Laborabschnitt zur Aufnahme eigener Elektro
 
 \section{Einschränkungen}
 
-Eine händische Analyse der Bilder aus dem zur Verfügung gestellten Datensatz hat ergeben, dass sowohl Trainings- als auch Validationsdaten hohe Redundanzen aufweisen. Viele der Bilder zeigen das gleiche defekte Panel, jedoch mit leicht unterschiedlichen Helligkeitswerten. Dies ist vermutlich darauf rückzuführen, dass mehrere Aufnahmen vom gleichen Panel gemacht oder die gleiche Aufnahme mehrfach abgespeichert wurde. Stichproben zeigten sowohl binär identische Bilder, aber auch solche die einen leichten Positions- und Helligkeitsversatz aufwiesen.
+Eine händische Analyse der Bilder aus dem zur Verfügung gestellten Datensatz hat ergeben, dass sowohl Trainings- als auch Validationsdaten hohe Redundanzen aufweisen. Viele der Bilder zeigen die gleiche defekte Zelle, jedoch mit leicht unterschiedlichen Helligkeitswerten. Dies ist vermutlich darauf rückzuführen, dass mehrere Aufnahmen von der gleichen Zelle gemacht oder die gleiche Aufnahme mehrfach abgespeichert wurde. Stichproben zeigten sowohl binär identische Bilder, aber auch solche die einen leichten Positions- und Helligkeitsversatz aufwiesen.
