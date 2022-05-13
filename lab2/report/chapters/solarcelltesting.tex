@@ -116,7 +116,16 @@ gewählt, mit dem Operator \({\left \{\cdot \right \}} \oslash {\left \{\cdot \r
 %
 wobei \(N\) der Höhe bzw.\@ Breite des quadratischen Bildes entspricht, werden die Pixelkoordinaten vom linken, rechten, oberen und unteren Rand sowie den drei Versorgungsleisten extrahiert. Um diese wird nun die Bildmaske gelegt. Dies ermöglicht relativ robustes maskieren der Busleisten. Da die adaptive Schwellwertbildung nur eine lokale Grauwertverteilung berücksichtigt, gelangt auch Schmutz und Feinstrukturen in die Teilsegmentierung. Außerdem scheitert der lokale Ansatz an größeren Dunkelstellen (\defectdarkarea{}), was dazu führt, dass diese aus der Segmentierung fallen. Um dies zu verhindern wird eine globale Schwellwertbildung mit verhältnismäßig niedrigem Schwellwert angewandt. Die so erkannten \texttt{\foreignlanguage{english}{OFF}} Pixel werden dem Teilsegmentierung hinzugefügt. Gleiches wird mit einem verhältnismäßig hohen Schwellwert für \texttt{\foreignlanguage{english}{ON}} Pixel vorgenommen um Schmutzpartikel und andere Störungen von der Teilsegmentierung zu entfernen. Nach Kombination der Bildmasken mit dem teil-segmentierten Bild wird final eine Erodierung vertikaler Kanten durchgeführt. Dazu wird ein der Kernel \(\boldsymbol{S}_{\mathrm{erode},\mathrm{vert}} = {\left[ 1, 0, 1 \right]}\) der Form \(1 \times 3\) angewandt. Dieser entfernt dünne vertikale Linien zwischen den einzelnen Fingern. Übrig bleibt das segmentierte Binärbild.
 
-Als Merkmale dienen die Fläche, Ausrichtung, Umfang und Exzentrizität der Kontur.
+Für die Merkmalsextraktion werden aus dem segmentierten Binärbild Konturen extrahiert. Der Merkmalsvektor besteht aus den Komponenten:
+%
+\begin{description}
+    \item[Fläche] Hauptargument für \defectok{} oder eine der anderen Defektklassen. Flächenmäßig kleine Konturen deuten eher auf \foreignlanguage{english}{false-Positives} der Segmentierung hin.
+    \item[Ausrichtung] Unterscheidung von \defectfinger{} oder \defectcrack{}. Während stets vertikal (\(\theta = \frac{\pi}{2}\)) verlaufen, liegen \defectcrack{} oft schräg (\(\theta \neq \frac{\pi}{2}\)).
+    \item[Umfang] Möglicherweise dienlich zur Unterteilung von \defectdarkarea{} und \defectfinger{}. Vermutlich aber das schwächste Merkmal in dieser Variante.
+    \item[Exzentrizität] Unterscheidung von \defectcrack{} und \defectdarkarea{}, da erstere linienförmig und damit hoch exzentrisch auftreten.
+\end{description}
+
+Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größten Flächenkomponente. Nur dieser wird für die Klassifikation des Gesamtbildes verwendet.
 
 \begin{figure}[ht]
     \centering
