@@ -20,7 +20,13 @@ Ein hier nicht näher betrachteter Defekt steht im Zusammenhang mit Inhomogenit�
 
 Zum Zwecke der automatischen Inspektion der mittels Elektrolumineszenzprüfung gewonnenen Bilder bedarf es einer Fehlersegmentierung und anschließenden Klassifizierung in die genannten Defektklassen. Jedem Bild wird dabei nur eine einzelne Klasse zugeordnet. Eine Arbitrierung zwischen gleichzeitig auftretenden Defekten findet über das flächenmäßig größte erkannte Segment statt.
 
-Der grundlegende Aufbau der Bildverarbeitungskette ist in \cref{fig:overall_flow_chart} gezeigt. Da einige der Prozessschritte bereits vorbereitet waren, liegt der Fokus dieser Ausarbeitung auf den Blöcken \textbf{Segmentierung}, \textbf{Merkmalsextraktion}, \textbf{Training} und \textbf{Klassifikation}. Im Zuge des Labors wurden jeweils zwei Varianten für Segmentierung und Merkmalsextraktion implementiert. Auf diese wird im Folgenden näher eingegangen.
+Der grundlegende Aufbau der Bildverarbeitungskette ist in \cref{fig:overall_flow_chart} gezeigt. Da einige der Prozessschritte bereits vorbereitet waren, liegt der Fokus dieser Ausarbeitung auf den Blöcken \textbf{Segmentierung}, \textbf{Merkmalsextraktion}, \textbf{Training} und \textbf{Klassifikation}. Im Zuge des Labors wurden jeweils zwei Varianten für Segmentierung und Merkmalsextraktion implementiert. Auf diese wird in den folgenden Abschnitten näher eingegangen. Die Klassifikation findet mittels \foreignlanguage{english}{\(k\)-nearest neighbor} Verfahren statt. In dessen Training wird zu den ausgewählten Merkmalsvektoren jeweils die gelabelte \foreignlanguage{english}{\emph{Ground Truth}} vorgemerkt. Zusätzlich ist der Merkmalsvektor \(\boldsymbol{v}\) zu normieren. Hierbei wurde eine Normierung zum komponentenweisen Mittelwert \(\bar{\boldsymbol{v}}\) und zur komponentenweisen Standardabweichung \(\boldsymbol{\sigma}_{\boldsymbol{v}}\) nach der Formel,
+%
+\begin{equation*}
+    \boldsymbol{v}_{\mathrm{norm}} = {\left( \boldsymbol{v} - \bar{\boldsymbol{v}} \right)} \oslash \boldsymbol{\sigma}_{\boldsymbol{v}} {,}
+\end{equation*}
+%
+gewählt, mit dem Operator \({\left \{\cdot \right \}} \oslash {\left \{\cdot \right \}}\) definiert als Hadamard oder elementweise Division zweier gleich dimensionierter Vektoren. Im Klassifikationsschritt mit Validierungsdaten wird dann lediglich die gleiche Segmentierung, Merkmalsextraktion und Normierung mittels \(\bar{\boldsymbol{v}}\) und \(\boldsymbol{\sigma}_{\boldsymbol{v}}\) durchgeführt. Für jeden Vektor \(\boldsymbol{v}_{\mathrm{val}}\) aus dem Validierungsdatensatz wird die Euklidische Distanz zur Menge aller Merkmalsvektoren \({\left \{ \boldsymbol{v}_{\mathrm{train} } \right \}}\) aus dem Trainingsschritt berechnet. Um eine Vorhersage zu treffen werden die \(k\) kleinsten Distanzen ausgewählt und die Klassenzugehörigkeit der entsprechenden Trainingsvektoren bestimmt. Ein Mehrheitsentscheid der \(k\) entnommenen Klassen dient der finalen Entscheidungsfindung. Bei Parität wird die Klassenzugehörigkeit des in der Trainingsreihenfolge ersteren Merkmalsvektors angenommen. Dabei handelt es sich nicht um eine aktiv getroffene Entscheidung, sondern um einen Nebeneffekt der verwendeten Python-Bibliothek. Bei der Hyperparametrierung ist darauf zu achten, dass \(k\) ungerade ist. In allen ausprobierten Varianten wurde festgestellt, dass die höchste \foreignlanguage{english}{Accuracy} mit \(k = 1\), sprich einem einfachen \foreignlanguage{english}{nearest neighbor} Algorithmus, erzielt werden konnte. Auf verschiedene Varianten der Segmentierung und Merkmalsextraktion wird nun näher eingegangen.
 
 \begin{figure}[ht]
     \centering
@@ -62,7 +68,7 @@ Der grundlegende Aufbau der Bildverarbeitungskette ist in \cref{fig:overall_flow
             \node [process, provided] {Darstellung des Merkmalraums};
             \node [process] {\textbf{Training}\\\small Erstellen des k-nearest Neighbor Raums};
             \node [process, provided] {Validierungsbilder einlesen und segmentieren};
-            \node [process] {\textbf{Klassifikation}\\\small Bilder klassifizieren über k-nearest Neighbor};
+            \node [process] {\textbf{Klassifikation}\\\small Bilder klassifizieren über \(k\)-nearest Neighbor};
             \node [process, provided] {Bestimmung der Accuracy und Confusion Matrix};
             \node [end] {Ende};
         \end{scope}
