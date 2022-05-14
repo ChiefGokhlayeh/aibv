@@ -29,7 +29,7 @@ Der grundlegende Aufbau der Bildverarbeitungskette ist in \cref{fig:overall_flow
 %
 gewählt, mit dem Operator \({\left \{\cdot \right \}} \oslash {\left \{\cdot \right \}}\) definiert als Hadamard oder elementweise Division zweier gleich dimensionierter Vektoren. Im Klassifikationsschritt mit Validierungsdaten wird dann lediglich die gleiche Segmentierung, Merkmalsextraktion und Normierung mittels \(\bar{\boldsymbol{v}}\) und \(\boldsymbol{\sigma}_{\boldsymbol{v}}\) durchgeführt. Für jeden Vektor \(\boldsymbol{v}_{\mathrm{val}}\) aus dem Validierungsdatensatz wird die Euklidische Distanz zur Menge aller Merkmalsvektoren \({\left \{ \boldsymbol{v}_{\mathrm{train} } \right \}}\) aus dem Trainingsschritt berechnet. Um eine Vorhersage zu treffen werden die \(k\) kleinsten Distanzen ausgewählt und die Klassenzugehörigkeit der entsprechenden Trainingsvektoren bestimmt. Ein Mehrheitsentscheid der \(k\) entnommenen Klassen dient der finalen Entscheidungsfindung. Bei Parität wird die Klassenzugehörigkeit des in der Trainingsreihenfolge ersteren Merkmalsvektors angenommen. Dabei handelt es sich nicht um eine aktiv getroffene Entscheidung, sondern um einen Nebeneffekt der verwendeten Python-Bibliothek. Bei der Hyperparametrierung ist darauf zu achten, dass \(k\) ungerade ist. In allen ausprobierten Varianten wurde festgestellt, dass die höchste \foreignlanguage{english}{Accuracy} mit \(k = 1\), sprich einem einfachen \foreignlanguage{english}{nearest neighbor} Algorithmus, erzielt werden konnte. Auf verschiedene Varianten der Segmentierung und Merkmalsextraktion wird nun näher eingegangen.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \begin{tikzpicture}[
         start/.style={
@@ -119,18 +119,7 @@ gewählt, mit dem Operator \({\left \{\cdot \right \}} \oslash {\left \{\cdot \r
 %
 wobei \(N\) der Höhe bzw.\@ Breite des quadratischen Bildes entspricht, werden die Pixelkoordinaten vom linken, rechten, oberen und unteren Rand sowie den drei Versorgungsleisten extrahiert. Um diese wird nun die Bildmaske gelegt. Dies ermöglicht relativ robustes maskieren der Busleisten. Das Verfahren ist in \cref{fig:bus_mask_finger} illustriert. Gezeigt ist das \foreignlanguage{english}{Canny} Eingangsbild sowie die Ergebnisse beider Korrelationen mit dem abgebildeten \foreignlanguage{english}{Edge-Finder} Kernel. Da die adaptive Schwellwertbildung nur eine lokale Grauwertverteilung berücksichtigt, gelangt auch Schmutz und Feinstrukturen in die Teilsegmentierung. Außerdem scheitert der lokale Ansatz an größeren Dunkelstellen (\defectdarkarea{}), was dazu führt, dass diese aus der Segmentierung fallen. Um dies zu verhindern wird eine globale Schwellwertbildung mit verhältnismäßig niedrigem Schwellwert angewandt. Die so erkannten \texttt{\foreignlanguage{english}{OFF}} Pixel werden dem Teilsegmentierung hinzugefügt. Gleiches wird mit einem verhältnismäßig hohen Schwellwert für \texttt{\foreignlanguage{english}{ON}} Pixel vorgenommen um Schmutzpartikel und andere Störungen von der Teilsegmentierung zu entfernen. Nach Kombination der Bildmasken mit dem teil-segmentierten Bild wird final eine Erodierung vertikaler Kanten durchgeführt. Dazu wird ein der Kernel \(\boldsymbol{S}_{\mathrm{erode},\mathrm{vert}} = {\left[ 1, 0, 1 \right]}\) der Form \(1 \times 3\) angewandt. Dieser entfernt dünne vertikale Linien zwischen den einzelnen Fingern. Übrig bleibt das segmentierte Binärbild.
 
-Für die Merkmalsextraktion werden aus dem segmentierten Binärbild Konturen extrahiert. Der Merkmalsvektor besteht aus den Komponenten:
-%
-\begin{description}
-    \item[Fläche] Hauptargument für \defectok{} oder eine der anderen Defektklassen. Flächenmäßig kleine Konturen deuten eher auf \foreignlanguage{english}{false-Positives} der Segmentierung hin.
-    \item[Ausrichtung] Unterscheidung von \defectfinger{} oder \defectcrack{}. Während stets vertikal (\(\theta = \frac{\pi}{2}\)) verlaufen, liegen \defectcrack{} oft schräg (\(\theta \neq \frac{\pi}{2}\)).
-    \item[Umfang] Möglicherweise dienlich zur Unterteilung von \defectdarkarea{} und \defectfinger{}. Vermutlich aber das schwächste Merkmal in dieser Variante.
-    \item[Exzentrizität] Unterscheidung von \defectcrack{} und \defectdarkarea{}, da erstere linienförmig und damit hoch exzentrisch auftreten.
-\end{description}
-
-Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größten Flächenkomponente. Nur dieser wird für die Klassifikation des Gesamtbildes verwendet. Es ergibt sich der in \cref{fig:feature_space_var0} gezeigte Merkmalsraum. Die Abbildung stellt jeweils zwei Merkmale des Merkmalsvektors gegenüber. Die Gegenüberstellung \emph{Fläche zu Ausrichtung} zeigt gute Separierung zwischen \defectfinger{} und \defectcrack{}. \emph{Fläche zu Umfang} bzw.\@ \emph{Fläche zu Exzentrizität} hingegen lassen keine klare Unterscheidung zwischen \defectfinger{} und \defectcrack{} zu. Aus allen drei Graphen wird ersichtlich, dass die Vorhersage von \defectdarkarea{} gut über die Fläche entscheiden lässt.
-
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \begin{tikzpicture}[
         start/.style={
@@ -197,7 +186,18 @@ Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größt
     \caption{Veranschaulichung der Busmasken Generierung.\label{fig:bus_mask_finger}}
 \end{figure}
 
-\begin{figure}[ht]
+Für die Merkmalsextraktion werden aus dem segmentierten Binärbild Konturen extrahiert. Der Merkmalsvektor besteht aus den Komponenten:
+%
+\begin{description}
+    \item[Fläche] Hauptargument für \defectok{} oder eine der anderen Defektklassen. Flächenmäßig kleine Konturen deuten eher auf \foreignlanguage{english}{false-Positives} der Segmentierung hin.
+    \item[Ausrichtung] Unterscheidung von \defectfinger{} oder \defectcrack{}. Während stets vertikal (\(\theta = \frac{\pi}{2}\)) verlaufen, liegen \defectcrack{} oft schräg (\(\theta \neq \frac{\pi}{2}\)).
+    \item[Umfang] Möglicherweise dienlich zur Unterteilung von \defectdarkarea{} und \defectfinger{}. Vermutlich aber das schwächste Merkmal in dieser Variante.
+    \item[Exzentrizität] Unterscheidung von \defectcrack{} und \defectdarkarea{}, da erstere linienförmig und damit hoch exzentrisch auftreten.
+\end{description}
+
+Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größten Flächenkomponente. Nur dieser wird für die Klassifikation des Gesamtbildes verwendet. Es ergibt sich der in \cref{fig:feature_space_var0} gezeigte Merkmalsraum. Die Abbildung stellt jeweils zwei Merkmale des Merkmalsvektors gegenüber. Die Gegenüberstellung \emph{Fläche zu Ausrichtung} zeigt gute Separierung zwischen \defectfinger{} und \defectcrack{}. \emph{Fläche zu Umfang} bzw.\@ \emph{Fläche zu Exzentrizität} hingegen lassen keine klare Unterscheidung zwischen \defectfinger{} und \defectcrack{} zu. Aus allen drei Graphen wird ersichtlich, dass die Vorhersage von \defectdarkarea{} gut über die Fläche entscheiden lässt.
+
+\begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{images/feature_space_var0.eps}
     \caption{Merkmalsraum der Variante 1\label{fig:feature_space_var0}}
@@ -205,7 +205,7 @@ Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größt
 
 Mit der beschriebenen Segmentierung und Merkmalsextraktion lässt sich eine \foreignlanguage{english}{Accuracy} von \SI{89.69}{\percent} unter Betrachtung von \(k = 1\) nächsten Nachbarn erzielen. Mit \(k = 3\) sinkt diese auf \SI{80.41}{\percent}. \Cref{fig:confusion_matrix_var0} zeigt die \foreignlanguage{english}{Confusion Matrix} bei \(k = 1\). Die beschriebene Variante schafft es \defectcrack{} und \defectfinger{} zu differenzieren. Die größten Probleme liegen bei der Vorhersage von \defectcrack{} und \defectdarkarea{}, jedoch sind die Zahlen der \foreignlanguage{english}{Confusion Matrix} aufgrund der in \cref{sct:constraints} beschriebenen Einschränkungen möglicherweise durch duplizierte Validierungsdaten verfälscht.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \includegraphics{images/confusion_matrix_var0.eps}
     \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 1\label{fig:confusion_matrix_var0}}
@@ -219,7 +219,7 @@ Die zweite Variante nutzt die gleiche Segmentierung wie in \cref{fig:segmentatio
 
 Im Merkmalsvektor von \nameref{sct:variant0} wird Umfang nun gegen die Dichte der Kontur getauscht. Der resultierende Merkmalsraum ist in \cref{fig:feature_space_var1} dargestellt. Verglichen mit der Gegenüberstellung von \emph{Fläche zu Umfang} aus \cref{fig:feature_space_var0} zeigt \emph{Fläche zu Dichte} eine bessere Abgrenzung von \defectcrack{} und \defectfinger{}.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{images/feature_space_var1.eps}
     \caption{Merkmalsraum der Variante 2\label{fig:feature_space_var1}}
@@ -227,7 +227,7 @@ Im Merkmalsvektor von \nameref{sct:variant0} wird Umfang nun gegen die Dichte de
 
 Die erzielte \foreignlanguage{english}{Accuracy} beläuft sich auch \SI{90.72}{\percent} bei \(k = 1\) und \SI{85.57}{\percent} bei \(k = 3\). Dies spiegelt sich auch in \cref{fig:confusion_matrix_var1} wider, in der nun allen voran \defectfinger{} Vorhersagen zu den Falscherkennungen beitragen.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \includegraphics{images/confusion_matrix_var1.eps}
     \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 2\label{fig:confusion_matrix_var1}}
@@ -239,7 +239,7 @@ Die erzielte \foreignlanguage{english}{Accuracy} beläuft sich auch \SI{90.72}{\
 
 Im Gegensatz zu \nameref{sct:variant0} und \nameref{sct:variant1} wird nun die Segmentierung angepasst. Der Ablauf ist in \cref{fig:segmentation_var2} dargestellt. Die ersten Schritte bis zur Adaptiven Schwellwertbildung und der Busmasken Generierung werden übernommen. Nach der Adaptiven Schwellwertbildung wird nun jedoch ein horizontal orientierter \(3 \times 1\) Gauß-Kernel auf das Grauwertbild appliziert. Anschließend findet eine Median Filterung statt, um Störungen zu reduzieren. Durch die Filterung entstehen weiche Kanten im segmentierten Bild, die mittels globaler Schwellwertbildung abgeschnitten werden. Anders als in \nameref{sct:variant0} und \nameref{sct:variant1} wird nur eine Busmaske erzeugt und angewendet. Schließlich findet eine Dilatation und Erosion mit unterschiedlichen Iterationen statt, um die verbleibenden Störungen zu entfernen.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \begin{tikzpicture}[
         start/.style={
@@ -295,7 +295,7 @@ Im Gegensatz zu \nameref{sct:variant0} und \nameref{sct:variant1} wird nun die S
 
 Mit einer \foreignlanguage{english}{Accuracy} von \SI{92.78}{\percent} bei \(k = 1\) schneidet diese Variante sehr positiv ab. Auch hier verringert sich die \foreignlanguage{english}{Accuracy} auf \SI{81.44}{\percent} bei \(k = 3\). Die \foreignlanguage{english}{Confusion Matrix} in \cref{fig:confusion_matrix_var2} deutet primär auf verbleibende Verwechslungen der \defectok{} und \defectfinger{} Klassen hin.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \includegraphics{images/confusion_matrix_var2.eps}
     \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 3\label{fig:confusion_matrix_var2}}
@@ -307,7 +307,7 @@ Mit einer \foreignlanguage{english}{Accuracy} von \SI{92.78}{\percent} bei \(k =
 
 Diese letzte Variante kombiniert die Segmentierung aus \cref{fig:segmentation_var2} mit dem Merkmalsraum aus \nameref{sct:variant1}, d.h.\@ Fläche, Ausrichtung, Dichte und Exzentrizität. Durch die geänderte Segmentierung ergibt sich verglichen mit \nameref{sct:variant1} ein leicht abgeänderter Merkmalsraum (siehe \cref{fig:feature_space_var3}). So ist zu erkennen, dass im Graphen \emph{Fläche zu Dichte} die Defekte \defectfinger{} und \defectcrack{} geringfügig auseinander gewandert sind.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{images/feature_space_var3.eps}
     \caption{Merkmalsraum der Variante 4\label{fig:feature_space_var3}}
@@ -315,7 +315,7 @@ Diese letzte Variante kombiniert die Segmentierung aus \cref{fig:segmentation_va
 
 Die \foreignlanguage{english}{Accuracy} dieser Variante beläuft sich auf \SI{90.72}{\percent} bei \(k = 1\) und \SI{83.51}{\percent} bei \(k = 3\). Bei Betrachtung der \foreignlanguage{english}{Confusion Matrix} ist eine ähnliche Verteilung wie in \cref{fig:confusion_matrix_var2} der \nameref{sct:variant2} zu erkennen.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
     \centering
     \includegraphics{images/confusion_matrix_var3.eps}
     \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 4\label{fig:confusion_matrix_var3}}
@@ -327,7 +327,7 @@ Die \foreignlanguage{english}{Accuracy} dieser Variante beläuft sich auf \SI{90
 
 Die Ergebnisse der Validierung sind in \cref{tbl:accuracy} aufgeführt. Als Maß der Qualität der Klassifikation dient die \foreignlanguage{english}{Accuracy}. Es ist festzustellen, dass \nameref{sct:variant2} mit \SI{92.78}{\percent} bei \(k = 1\) die höchste Genauigkeit liefert.
 
-\begin{table}
+\begin{table}[htb]
     \centering
     \caption{\foreignlanguage{english}{Accuracy} je Variante.\label{tbl:accuracy}}
     \begin{tabular}{r r r}
@@ -350,7 +350,7 @@ Diese Erkenntnis macht deutlich, dass bevor weitere Optimierung an der Segmentie
 
 \Cref{fig:error4,fig:error5} zeigen eine Falscherkennung aufgrund von Störungen. In \cref{fig:error3} ist diese sogar flächenmäßig größer als der eigentliche Defekt und hat damit eine Klassifikation auf Basis des falschen Segments erzwungen. Es liegt nahe, dass eine bessere Störunterdrückung solche Fälle eliminieren könnte.
 
-\begin{figure}[htp]
+\begin{figure}[htbp]
     \centering
     \begin{subfigure}{\textwidth}
         \centering
@@ -370,7 +370,7 @@ Diese Erkenntnis macht deutlich, dass bevor weitere Optimierung an der Segmentie
     \caption{Falsch klassifizierte Bilder (1/2).\label{fig:error_analysis1}}
 \end{figure}
 
-\begin{figure}[htp]
+\begin{figure}[htbp]
     \centering
     \begin{subfigure}{\textwidth}
         \centering
