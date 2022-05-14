@@ -29,6 +29,7 @@
 \usepackage[ngerman,colorlinks=true]{hyperref}
 \usepackage[ngerman]{cleveref}
 \usepackage{nameref}
+\usepackage{menukeys}
 \usepackage{soul}
 \usepackage{hawstyle}
 \usepackage{lipsum} %% for sample text
@@ -48,6 +49,9 @@
   positioning,
   shapes.geometric,
 }
+
+%% set menukeys style
+\renewmenumacro{\directory}[>]{pathswithblackfolder}
 
 %% define custom commands
 \newcommand{\defectcrack}{\texttt{crack}\xspace}

@@ -6,6 +6,7 @@
         "\\defectdarkarea{}": "dummy",
         "\\defectfinger{}": "dummy",
         "\\defectok{}": "vowelDummy",
+        "\\directory{}": "dummy",
         "\\HAWThesisProperties{}": "ignore",
         "\\hyphenation{}": "ignore",
         "\\lstset{}": "ignore",

@@ -320,3 +320,72 @@ Die \foreignlanguage{english}{Accuracy} dieser Variante beläuft sich auf \SI{90
     \includegraphics{images/confusion_matrix_var3.eps}
     \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 4\label{fig:confusion_matrix_var3}}
 \end{figure}
+
+\FloatBarrier{}
+
+\subsection{Zusammenfassung der Ergebnisse}
+
+Die Ergebnisse der Validierung sind in \cref{tbl:accuracy} aufgeführt. Als Maß der Qualität der Klassifikation dient die \foreignlanguage{english}{Accuracy}. Es ist festzustellen, dass \nameref{sct:variant2} mit \SI{92.78}{\percent} bei \(k = 1\) die höchste Genauigkeit liefert.
+
+\begin{table}
+    \centering
+    \caption{\foreignlanguage{english}{Accuracy} je Variante.\label{tbl:accuracy}}
+    \begin{tabular}{r r r}
+        \toprule
+                   & \(k = 1\)            & \(k = 3\)            \\
+        \midrule
+        Variante 1 & \SI{89.69}{\percent} & \SI{80.41}{\percent} \\
+        Variante 2 & \SI{90.72}{\percent} & \SI{85.57}{\percent} \\
+        Variante 3 & \SI{92.78}{\percent} & \SI{81.44}{\percent} \\
+        Variante 4 & \SI{90.72}{\percent} & \SI{83.51}{\percent} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Die Ergebnisse von \nameref{sct:variant2} werden nun einer genaueren Fehleranalyse unterzogen. \Cref{fig:error_analysis1,fig:error_analysis2} zeigen eine Gegenüberstellung aller fehlerhaft klassifizierten Bilder. Abgebildet ist jeweils das Grauwertbild mit und ohne Kontur, und das segmentierte Binärbild mit Kontur. Hier nicht aufgelistet sind binär identische und somit redundante Bilder aus dem Validierungsdatensatz. Grundlegend ist festzustellen, dass die Segmentierung noch immer einige Störungen aufweist. So ist auf einigen Zellen ein Reifenprofil-ähnliches Muster zu erkennen. Eine Hypothese zur Ursache dieser Abdrücke ist das Förderband in der Produktionsstraße. Unabhängig der Ursache sind diese Abdrucke hauptverantwortlich für Störungen in der Segmentierung.
+
+Die in \cref{fig:error2} gezeigte Falschklassifizierung von \directory{val/darkarea/0217.jpg} ist möglicherweise auf ein falsch gelabeltes Bild im Trainingsdatensatz zurückzuführen. So zeigt das Bild \directory{train/ok/0135.jpg} die gleiche Zelle mit exakt dem gleichen Defekt, ist jedoch als \defectok{} gelabelt. Es ist nicht bekannt, ob dieser Sachverhalt auch für andere Falschklassifizierung zutrifft.
+
+Diese Erkenntnis macht deutlich, dass bevor weitere Optimierung an der Segmentierung oder der Merkmalsextraktion stattfinden, eine grundsätzliche Evaluation des zur Verfügung gestellten Datensatzes notwendig ist. In erster Näherung wäre dies recht simpel mit einem Binärvergleich aller Daten möglich. So könnten trivial erkennbare Redundanzen eliminiert werden.
+
+\Cref{fig:error4,fig:error5} zeigen eine Falscherkennung aufgrund von Störungen. In \cref{fig:error3} ist diese sogar flächenmäßig größer als der eigentliche Defekt und hat damit eine Klassifikation auf Basis des falschen Segments erzwungen. Es liegt nahe, dass eine bessere Störunterdrückung solche Fälle eliminieren könnte.
+
+\begin{figure}[htp]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics{images/error_analysis_var2_0044.eps}
+        \caption{\label{fig:error0}}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics{images/error_analysis_var2_0195.eps}
+        \caption{\label{fig:error1}}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics{images/error_analysis_var2_0217.eps}
+        \caption{\label{fig:error2}}
+    \end{subfigure}
+    \caption{Falsch klassifizierte Bilder (1/2).\label{fig:error_analysis1}}
+\end{figure}
+
+\begin{figure}[htp]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics{images/error_analysis_var2_0253.eps}
+        \caption{\label{fig:error3}}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics{images/error_analysis_var2_0265.eps}
+        \caption{\label{fig:error4}}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics{images/error_analysis_var2_0368.eps}
+        \caption{\label{fig:error5}}
+    \end{subfigure}
+    \caption{Falsch klassifizierte Bilder (2/2).\label{fig:error_analysis2}}
+\end{figure}
