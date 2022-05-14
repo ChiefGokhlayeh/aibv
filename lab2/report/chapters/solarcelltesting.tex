@@ -125,7 +125,7 @@ Für die Merkmalsextraktion werden aus dem segmentierten Binärbild Konturen ext
     \item[Exzentrizität] Unterscheidung von \defectcrack{} und \defectdarkarea{}, da erstere linienförmig und damit hoch exzentrisch auftreten.
 \end{description}
 
-Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größten Flächenkomponente. Nur dieser wird für die Klassifikation des Gesamtbildes verwendet.
+Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größten Flächenkomponente. Nur dieser wird für die Klassifikation des Gesamtbildes verwendet. Es ergibt sich der in \cref{fig:feature_space_var0} gezeigte Merkmalsraum. Die Abbildung stellt jeweils zwei Merkmale des Merkmalsvektors gegenüber. Die Gegenüberstellung \emph{Fläche zu Ausrichtung} zeigt gute Separierung zwischen \defectfinger{} und \defectcrack{}. \emph{Fläche zu Umfang} bzw.\@ \emph{Fläche zu Exzentrizität} hingegen lassen keine klare Unterscheidung zwischen \defectfinger{} und \defectcrack{} zu. Aus allen drei Graphen wird ersichtlich, dass die Vorhersage von \defectdarkarea{} gut über die Fläche entscheiden lässt.
 
 \begin{figure}[ht]
     \centering
