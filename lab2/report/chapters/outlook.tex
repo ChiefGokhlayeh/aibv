@@ -1,0 +1,8 @@
+% !TeX root = ../main.tex
+\chapter{Ausblick}
+
+Aufgrund der erwähnten Defizite des Trainings- und Validierungsdatensatzes wäre eine Evaluation mit neu aufgenommenen und korrekt gelabelten Daten sinnvoll. Dabei ist nicht auszuschließen, dass die Genauigkeit sinkt. Mögliche Redundanzen im Trainings- und Validierungsdatensatz verbessern schließlich die Genauigkeit, verringern jedoch die Generalisierbarkeit des Klassifikators.
+
+Ein alternativer Ansatz zur Segmentierung des Grauwertbildes könnte der \foreignlanguage{english}{Canny Edge-Detection} liefern. Dieser wird momentan nur für das Fitting einer Bildmaske verwendet, könnte jedoch dabei helfen, die Kanten von \defectcrack{} und \defectfinger{} zu detektieren. Damit könnte stärkere Tiefpassfilterung eingesetzt werden, die Schmutz und Abdrücke glatt filtert. Die Defekte könnten anschließend aus dem \foreignlanguage{english}{Canny} Bild rekonstruiert werden.
+
+Schließlich könnte eine alternative Merkmalsextraktion zu verbesserten Ergebnissen führen. Im aktuellen Ansatz werden die Merkmale allein aus dem segmentierten Binärbild extrahiert. Es wäre denkbar auch Merkmale aus dem Grauwertbild abzuleiten, wie mittlerer Grauwert der Kontur oder Differenz zu benachbarten Pixeln. Darüber hinaus könnte die Nutzung gängiger Algorithmen wie SIFT oder SURF zur Beschreibung von Merkmalen ausprobiert werden.
