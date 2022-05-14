@@ -78,9 +78,9 @@ gewählt, mit dem Operator \({\left \{\cdot \right \}} \oslash {\left \{\cdot \r
 
 \FloatBarrier{}
 
-\subsection{Variante 1}
+\subsection{Variante 1\label{sct:variant0}}
 
-\Cref{fig:segmentation_var0} zeigt den schematischen Ablauf von Variante 1. Zunächst wird eine Überbelichtung des Grauwertbildes vorgenommen. Dabei dient das \(P_{70\%}\) Perzentil als neuer Maximalwert. Wie bei einer Überbelichtung üblich werden alle Werte über \(P_{70\%}\) bei \num{255} abgeschnitten. Als Nächstes findet eine Belichtungskorrektur statt. Diese basiert auf Beobachtungen aus Stichproben, bei denen die obere rechte Ecke stets etwas dunkler als die anderen schien. Dies stellte sich in der Laborvorbereitung als limitierender Faktor bei globaler Schwellwertbildung heraus. Als Korrektur wird eine gaußförmige Helligkeitsmatrix auf die obere Rechte Ecke addiert. Das so normierte Grauwertbild dient nun als Eingang für vier nachgelagerte Prozessschritte. Zum einen wird eine adaptive Schwellwertbildung durchgeführt, um lokale Dunkelstellen (Defekte, Schmutz und konstruktionsbedingte Strukturen) zu extrahieren. Letztere müssen noch vom so teil-segmentierten Binärbild abgezogen werden. Um Makrostrukturen wie Busleisten zu eliminieren wird eine Maske generiert. Dazu wird das normierte Grauwertbild zunächst mittels gaußscher Weichzeichnung tiefpassgefiltert. Anschließend wird eine \foreignlanguage{english}{Canny Edge-Detection} auf das Bild angewandt, mit der die Kanten an den Busleisten extrahiert werden. Durch Korrelation mit den \foreignlanguage{english}{Edge-Finder} Kernels
+\Cref{fig:segmentation_var0} zeigt den schematischen Ablauf der ersten Variante. Zunächst wird eine Überbelichtung des Grauwertbildes vorgenommen. Dabei dient das \(P_{70\%}\) Perzentil als neuer Maximalwert. Wie bei einer Überbelichtung üblich werden alle Werte über \(P_{70\%}\) bei \num{255} abgeschnitten. Als Nächstes findet eine Belichtungskorrektur statt. Diese basiert auf Beobachtungen aus Stichproben, bei denen die obere rechte Ecke stets etwas dunkler als die anderen schien. Dies stellte sich in der Laborvorbereitung als limitierender Faktor bei globaler Schwellwertbildung heraus. Als Korrektur wird eine gaußförmige Helligkeitsmatrix auf die obere Rechte Ecke addiert. Das so normierte Grauwertbild dient nun als Eingang für vier nachgelagerte Prozessschritte. Zum einen wird eine adaptive Schwellwertbildung durchgeführt, um lokale Dunkelstellen (Defekte, Schmutz und konstruktionsbedingte Strukturen) zu extrahieren. Letztere müssen noch vom so teil-segmentierten Binärbild abgezogen werden. Um Makrostrukturen wie Busleisten zu eliminieren wird eine Maske generiert. Dazu wird das normierte Grauwertbild zunächst mittels gaußscher Weichzeichnung tiefpassgefiltert. Anschließend wird eine \foreignlanguage{english}{Canny Edge-Detection} auf das Bild angewandt, mit der die Kanten an den Busleisten extrahiert werden. Durch Korrelation mit den \foreignlanguage{english}{Edge-Finder} Kernels
 %
 \begin{align*}
     \boldsymbol{S}_{\mathrm{edge},\mathrm{vert}}^{\phantom{\intercal}} & = \left[\phantom{
@@ -212,11 +212,11 @@ Mit der beschriebenen Segmentierung und Merkmalsextraktion lässt sich eine \for
 
 \FloatBarrier{}
 
-\subsection{Variante 2}
+\subsection{Variante 2\label{sct:variant1}}
 
 Die zweite Variante nutzt die gleiche Segmentierung wie in \cref{fig:segmentation_var0}.
 
-Im Merkmalsvektor von Variante 1 wird Umfang nun gegen die Dichte der Kontur getauscht. Der resultierende Merkmalsraum ist in \cref{fig:feature_space_var1} dargestellt. Verglichen mit der Gegenüberstellung von \emph{Fläche zu Umfang} aus \cref{fig:feature_space_var0} zeigt \emph{Fläche zu Dichte} eine bessere Abgrenzung von \defectcrack{} und \defectfinger{}.
+Im Merkmalsvektor von \nameref{sct:variant0} wird Umfang nun gegen die Dichte der Kontur getauscht. Der resultierende Merkmalsraum ist in \cref{fig:feature_space_var1} dargestellt. Verglichen mit der Gegenüberstellung von \emph{Fläche zu Umfang} aus \cref{fig:feature_space_var0} zeigt \emph{Fläche zu Dichte} eine bessere Abgrenzung von \defectcrack{} und \defectfinger{}.
 
 \begin{figure}[ht]
     \centering
@@ -234,9 +234,9 @@ Die erzielte \foreignlanguage{english}{Accuracy} beläuft sich auch \SI{90.72}{\
 
 \FloatBarrier{}
 
-\subsection{Variante 3}
+\subsection{Variante 3\label{sct:variant2}}
 
-Im Gegensatz zu Variante 1 wird nun die Segmentierung angepasst. Der Ablauf ist in \cref{fig:segmentation_var2} dargestellt. Die ersten Schritte bis zur Adaptiven Schwellwertbildung und der Busmasken Generierung werden übernommen. Nach der Adaptiven Schwellwertbildung wird nun jedoch ein horizontal orientierter \(3 \times 1\) Gauß-Kernel auf das Grauwertbild appliziert. Anschließend findet eine Median Filterung statt, um Störungen zu reduzieren. Durch die Filterung entstehen weiche Kanten im segmentierten Bild, die mittels globaler Schwellwertbildung abgeschnitten werden. Anders als in Variante 1 wird nur eine Busmaske erzeugt und angewendet. Schließlich findet eine Dilatation und Erosion mit unterschiedlichen Iterationen statt, um die verbleibenden Störungen zu entfernen.
+Im Gegensatz zu \nameref{sct:variant0} und \nameref{sct:variant1} wird nun die Segmentierung angepasst. Der Ablauf ist in \cref{fig:segmentation_var2} dargestellt. Die ersten Schritte bis zur Adaptiven Schwellwertbildung und der Busmasken Generierung werden übernommen. Nach der Adaptiven Schwellwertbildung wird nun jedoch ein horizontal orientierter \(3 \times 1\) Gauß-Kernel auf das Grauwertbild appliziert. Anschließend findet eine Median Filterung statt, um Störungen zu reduzieren. Durch die Filterung entstehen weiche Kanten im segmentierten Bild, die mittels globaler Schwellwertbildung abgeschnitten werden. Anders als in \nameref{sct:variant0} und \nameref{sct:variant1} wird nur eine Busmaske erzeugt und angewendet. Schließlich findet eine Dilatation und Erosion mit unterschiedlichen Iterationen statt, um die verbleibenden Störungen zu entfernen.
 
 \begin{figure}[ht]
     \centering
@@ -302,9 +302,9 @@ Mit einer \foreignlanguage{english}{Accuracy} von \SI{92.78}{\percent} bei \(k =
 
 \FloatBarrier{}
 
-\subsection{Variante 4}
+\subsection{Variante 4\label{sct:variant3}}
 
-Diese letzte Variante kombiniert die Segmentierung aus \cref{fig:segmentation_var2} mit dem Merkmalsraum aus Variante 2, d.h.\@ Fläche, Ausrichtung, Dichte und Exzentrizität. Durch die geänderte Segmentierung ergibt sich verglichen mit Variante zwei ein leicht abgeänderter Merkmalsraum (siehe \cref{fig:feature_space_var3}). So ist zu erkennen, dass im Graphen \emph{Fläche zu Dichte} die Defekte \defectfinger{} und \defectcrack{} geringfügig auseinander gewandert sind.
+Diese letzte Variante kombiniert die Segmentierung aus \cref{fig:segmentation_var2} mit dem Merkmalsraum aus \nameref{sct:variant1}, d.h.\@ Fläche, Ausrichtung, Dichte und Exzentrizität. Durch die geänderte Segmentierung ergibt sich verglichen mit \nameref{sct:variant1} ein leicht abgeänderter Merkmalsraum (siehe \cref{fig:feature_space_var3}). So ist zu erkennen, dass im Graphen \emph{Fläche zu Dichte} die Defekte \defectfinger{} und \defectcrack{} geringfügig auseinander gewandert sind.
 
 \begin{figure}[ht]
     \centering
@@ -312,7 +312,7 @@ Diese letzte Variante kombiniert die Segmentierung aus \cref{fig:segmentation_va
     \caption{Merkmalsraum der Variante 4\label{fig:feature_space_var3}}
 \end{figure}
 
-Die \foreignlanguage{english}{Accuracy} dieser Variante beläuft sich auf \SI{90.72}{\percent} bei \(k = 1\) und \SI{83.51}{\percent} bei \(k = 3\). Bei Betrachtung der \foreignlanguage{english}{Confusion Matrix} ist eine ähnliche Verteilung wie in Variante zwei zu erkennen.
+Die \foreignlanguage{english}{Accuracy} dieser Variante beläuft sich auf \SI{90.72}{\percent} bei \(k = 1\) und \SI{83.51}{\percent} bei \(k = 3\). Bei Betrachtung der \foreignlanguage{english}{Confusion Matrix} ist eine ähnliche Verteilung wie in \nameref{sct:variant1} zu erkennen.
 
 \begin{figure}[ht]
     \centering
