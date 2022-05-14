@@ -76,6 +76,8 @@ gewählt, mit dem Operator \({\left \{\cdot \right \}} \oslash {\left \{\cdot \r
     \caption{Grundlegender Aufbau der Bildverarbeitungskette.\label{fig:overall_flow_chart}}
 \end{figure}
 
+\FloatBarrier{}
+
 \subsection{Variante 1}
 
 \Cref{fig:segmentation_var0} zeigt den schematischen Ablauf von Variante 1. Zunächst wird eine Überbelichtung des Grauwertbildes vorgenommen. Dabei dient das \(P_{70\%}\) Perzentil als neuer Maximalwert. Wie bei einer Überbelichtung üblich werden alle Werte über \(P_{70\%}\) bei \num{255} abgeschnitten. Als Nächstes findet eine Belichtungskorrektur statt. Diese basiert auf Beobachtungen aus Stichproben, bei denen die obere rechte Ecke stets etwas dunkler als die anderen schien. Dies stellte sich in der Laborvorbereitung als limitierender Faktor bei globaler Schwellwertbildung heraus. Als Korrektur wird eine gaußförmige Helligkeitsmatrix auf die obere Rechte Ecke addiert. Das so normierte Grauwertbild dient nun als Eingang für vier nachgelagerte Prozessschritte. Zum einen wird eine adaptive Schwellwertbildung durchgeführt, um lokale Dunkelstellen (Defekte, Schmutz und konstruktionsbedingte Strukturen) zu extrahieren. Letztere müssen noch vom so teil-segmentierten Binärbild abgezogen werden. Um Makrostrukturen wie Busleisten zu eliminieren wird eine Maske generiert. Dazu wird das normierte Grauwertbild zunächst mittels gaußscher Weichzeichnung tiefpassgefiltert. Anschließend wird eine \foreignlanguage{english}{Canny Edge-Detection} auf das Bild angewandt, mit der die Kanten an den Busleisten extrahiert werden. Durch Korrelation mit den \foreignlanguage{english}{Edge-Finder} Kernels
@@ -208,6 +210,8 @@ Mit der beschriebenen Segmentierung und Merkmalsextraktion lässt sich eine \for
     \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 1\label{fig:confusion_matrix_var0}}
 \end{figure}
 
+\FloatBarrier{}
+
 \subsection{Variante 2}
 
 Die zweite Variante nutzt die gleiche Segmentierung wie in \cref{fig:segmentation_var0}.
@@ -228,6 +232,10 @@ Die erzielte \foreignlanguage{english}{Accuracy} beläuft sich auch \SI{90.72}{\
     \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 2\label{fig:confusion_matrix_var1}}
 \end{figure}
 
+\FloatBarrier{}
+
 \subsection{Variante 3}
+
+\FloatBarrier{}
 
 \subsection{Variante 4}
