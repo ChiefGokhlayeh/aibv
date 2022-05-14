@@ -303,3 +303,19 @@ Mit einer \foreignlanguage{english}{Accuracy} von \SI{92.78}{\percent} bei \(k =
 \FloatBarrier{}
 
 \subsection{Variante 4}
+
+Diese letzte Variante kombiniert die Segmentierung aus \cref{fig:segmentation_var2} mit dem Merkmalsraum aus Variante 2, d.h.\@ Fläche, Ausrichtung, Dichte und Exzentrizität. Durch die geänderte Segmentierung ergibt sich verglichen mit Variante zwei ein leicht abgeänderter Merkmalsraum (siehe \cref{fig:feature_space_var3}). So ist zu erkennen, dass im Graphen \emph{Fläche zu Dichte} die Defekte \defectfinger{} und \defectcrack{} geringfügig auseinander gewandert sind.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{images/feature_space_var3.eps}
+    \caption{Merkmalsraum der Variante 4\label{fig:feature_space_var3}}
+\end{figure}
+
+Die \foreignlanguage{english}{Accuracy} dieser Variante beläuft sich auf \SI{90.72}{\percent} bei \(k = 1\) und \SI{83.51}{\percent} bei \(k = 3\). Bei Betrachtung der \foreignlanguage{english}{Confusion Matrix} ist eine ähnliche Verteilung wie in Variante zwei zu erkennen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics{images/confusion_matrix_var3.eps}
+    \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 4\label{fig:confusion_matrix_var3}}
+\end{figure}
