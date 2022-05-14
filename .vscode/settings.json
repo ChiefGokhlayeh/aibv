@@ -9,6 +9,7 @@
         "\\HAWThesisProperties{}": "ignore",
         "\\hyphenation{}": "ignore",
         "\\lstset{}": "ignore",
+        "\\SI{}{}": "dummy",
         "\\typeout{}": "ignore"
     }
 }

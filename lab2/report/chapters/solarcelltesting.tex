@@ -230,6 +230,8 @@ Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größt
     \caption{Merkmalsraum der Variante 1\label{fig:feature_space_var0}}
 \end{figure}
 
+Mit der beschriebenen Segmentierung und Merkmalsextraktion lässt sich eine \foreignlanguage{english}{Accuracy} von \SI{89.69}{\percent} unter Betrachtung von \(k = 1\) nächsten Nachbarn erzielen. Mit \(k = 3\) sinkt diese auf \SI{80.41}{\percent}. \Cref{fig:confusion_matrix_var0} zeigt die \foreignlanguage{english}{Confusion Matrix} bei \(k = 1\). Die beschriebene Variante schafft es \defectcrack{} und \defectfinger{} zu differenzieren. Die größten Probleme liegen bei der Vorhersage von \defectcrack{} und \defectdarkarea{}, jedoch sind die Zahlen der \foreignlanguage{english}{Confusion Matrix} aufgrund der in \cref{sct:constraints} beschriebenen Einschränkungen möglicherweise durch duplizierte Validierungsdaten verfälscht.
+
 \begin{figure}[ht]
     \centering
     \includegraphics{images/confusion_matrix_var0.eps}
