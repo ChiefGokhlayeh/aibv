@@ -78,7 +78,7 @@ gewählt, mit dem Operator \({\left \{\cdot \right \}} \oslash {\left \{\cdot \r
 
 \subsection{Variante 1}
 
-\Cref{fig:variant_1} zeigt den schematischen Ablauf von Variante 1. Zunächst wird eine Überbelichtung des Grauwertbildes vorgenommen. Dabei dient das \(P_{70\%}\) Perzentil als neuer Maximalwert. Wie bei einer Überbelichtung üblich werden alle Werte über \(P_{70\%}\) bei \num{255} abgeschnitten. Als Nächstes findet eine Belichtungskorrektur statt. Diese basiert auf Beobachtungen aus Stichproben, bei denen die obere rechte Ecke stets etwas dunkler als die anderen schien. Dies stellte sich in der Laborvorbereitung als limitierender Faktor bei globaler Schwellwertbildung heraus. Als Korrektur wird eine gaußförmige Helligkeitsmatrix auf die obere Rechte Ecke addiert. Das so normierte Grauwertbild dient nun als Eingang für vier nachgelagerte Prozessschritte. Zum einen wird eine adaptive Schwellwertbildung durchgeführt, um lokale Dunkelstellen (Defekte, Schmutz und konstruktionsbedingte Strukturen) zu extrahieren. Letztere müssen noch vom so teil-segmentierten Binärbild abgezogen werden. Um Makrostrukturen wie Busleisten zu eliminieren wird eine Maske generiert. Dazu wird das normierte Grauwertbild zunächst mittels gaußscher Weichzeichnung tiefpassgefiltert. Anschließend wird eine \foreignlanguage{english}{Canny Edge-Detection} auf das Bild angewandt, mit der die Kanten an den Busleisten extrahiert werden. Durch Korrelation mit den \foreignlanguage{english}{Edge-Finder} Kernels
+\Cref{fig:segmentation_var0} zeigt den schematischen Ablauf von Variante 1. Zunächst wird eine Überbelichtung des Grauwertbildes vorgenommen. Dabei dient das \(P_{70\%}\) Perzentil als neuer Maximalwert. Wie bei einer Überbelichtung üblich werden alle Werte über \(P_{70\%}\) bei \num{255} abgeschnitten. Als Nächstes findet eine Belichtungskorrektur statt. Diese basiert auf Beobachtungen aus Stichproben, bei denen die obere rechte Ecke stets etwas dunkler als die anderen schien. Dies stellte sich in der Laborvorbereitung als limitierender Faktor bei globaler Schwellwertbildung heraus. Als Korrektur wird eine gaußförmige Helligkeitsmatrix auf die obere Rechte Ecke addiert. Das so normierte Grauwertbild dient nun als Eingang für vier nachgelagerte Prozessschritte. Zum einen wird eine adaptive Schwellwertbildung durchgeführt, um lokale Dunkelstellen (Defekte, Schmutz und konstruktionsbedingte Strukturen) zu extrahieren. Letztere müssen noch vom so teil-segmentierten Binärbild abgezogen werden. Um Makrostrukturen wie Busleisten zu eliminieren wird eine Maske generiert. Dazu wird das normierte Grauwertbild zunächst mittels gaußscher Weichzeichnung tiefpassgefiltert. Anschließend wird eine \foreignlanguage{english}{Canny Edge-Detection} auf das Bild angewandt, mit der die Kanten an den Busleisten extrahiert werden. Durch Korrelation mit den \foreignlanguage{english}{Edge-Finder} Kernels
 %
 \begin{align*}
     \boldsymbol{S}_{\mathrm{edge},\mathrm{vert}}^{\phantom{\intercal}} & = \left[\phantom{
@@ -129,93 +129,63 @@ Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größt
 
 \begin{figure}[ht]
     \centering
-    \begin{subfigure}{\textwidth}
-        \centering
-        \begin{tikzpicture}[
-            start/.style={
-                    font=\small,
-                    draw,
-                    very thick,
-                    shape=ellipse,
-                    text depth=0.35ex,
-                    inner sep=0.25cm,
-                    on chain,
-                },
-            end/.style={
-                    start,
-                    join,
-                },
-            process_unjoined/.style={
-                    draw,
-                    very thick,
-                    rounded corners,
-                    text width=2.5cm,
-                    inner sep=0.25cm,
-                    align=center,
-                    on chain,
-                },
-            process/.style={
-                    process_unjoined,
-                    join,
-                },
-            connector/.style={very thick, -{Stealth[]}},
-            every join/.style={connector},
-            ]
-            \begin{scope}[start chain=trunk going below, node distance=5mm]
-                \node [start] {Start};
-                \node [process] {Überbelichtung};
-                \node (shading_process) [process] {Be\-lich\-tungs\-kor\-rek\-tur};
-                \node (adapt_process) [process] {Adaptive Schwellwertbildung};
-                \begin{scope}[start branch=canny going below]
-                    \node (canny_process) [process_unjoined, right=of adapt_process] {Bus\-leis\-ten-Erkennung mittels Can\-ny Edge-Detector};
-                    \node (bus_process) [process] {Maske: Busleisten};
-                \end{scope}
-                \begin{scope}[start branch=on going below]
-                    \node (on_process) [process_unjoined, right=of canny_process] {Maske: Schwellwertbildung der \texttt{ON} Pixel};
-                \end{scope}
-                \begin{scope}[start branch=off going below]
-                    \node (off_process) [process_unjoined, right=of on_process] {Maske: Schwellwertbildung der \texttt{OFF} Pixel};
-                \end{scope}
-                \path let \p{lowest}=(bus_process.south), \p{parent}=(adapt_process.south) in node (apply_process) [process] at (\x{parent}, \y{lowest}) {Anwendung der Bildmasken};
-                \node [process] {Erodierung vertikaler Kanten};
-                \node [end] {Ende};
+    \begin{tikzpicture}[
+        start/.style={
+                font=\small,
+                draw,
+                very thick,
+                shape=ellipse,
+                text depth=0.35ex,
+                inner sep=0.25cm,
+                on chain,
+            },
+        end/.style={
+                start,
+                join,
+            },
+        process_unjoined/.style={
+                draw,
+                very thick,
+                rounded corners,
+                text width=2.5cm,
+                inner sep=0.25cm,
+                align=center,
+                on chain,
+            },
+        process/.style={
+                process_unjoined,
+                join,
+            },
+        connector/.style={very thick, -{Stealth[]}},
+        every join/.style={connector},
+        ]
+        \begin{scope}[start chain=trunk going below, node distance=5mm]
+            \node [start] {Start};
+            \node [process] {Überbelichtung};
+            \node (shading_process) [process] {Be\-lich\-tungs\-kor\-rek\-tur};
+            \node (adapt_process) [process] {Adaptive Schwellwertbildung};
+            \begin{scope}[start branch=canny going below]
+                \node (canny_process) [process_unjoined, right=of adapt_process] {Bus\-leis\-ten-Erkennung mittels Can\-ny Edge-Detector};
+                \node (bus_process) [process] {Maske: Busleisten};
             \end{scope}
-            \draw [connector] (shading_process) -| (on_process);
-            \draw [connector] (shading_process) -| (off_process);
-            \draw [connector] (shading_process) -| (canny_process);
-            \draw [connector] (on_process) |- (apply_process);
-            \draw [connector] (off_process) |- (apply_process);
-            \draw [connector] (bus_process) |- (apply_process);
-        \end{tikzpicture}
-        \caption{Segmentierung \textbf{A}.\label{fig:segmentation_a}}
-    \end{subfigure}
-    \\
-    \begin{subfigure}{\textwidth}
-        \centering
-        \begin{tikzpicture}[
-                feature/.style={
-                        draw,
-                        very thick,
-                        text height=1.65ex,
-                        text depth=0.35ex,
-                        minimum width=2.5cm,
-                        inner sep=0.25cm,
-                    },
-            ]
-            \matrix [
-                matrix of nodes,
-                nodes={feature},
-                node distance=1cm,
-                row sep=0.25cm,
-                column sep=0.25cm
-            ] {
-                Fläche & Ausrichtung   \\
-                Umfang & Exzentrizität \\
-            };
-        \end{tikzpicture}
-        \caption{Merkmalsextraktion \textbf{A}.\label{fig:feature_extraction_a}}
-    \end{subfigure}
-    \caption{Segmentierung und Merkmale von Variante 1.\label{fig:variant_1}}
+            \begin{scope}[start branch=on going below]
+                \node (on_process) [process_unjoined, right=of canny_process] {Maske: Schwellwertbildung der \texttt{ON} Pixel};
+            \end{scope}
+            \begin{scope}[start branch=off going below]
+                \node (off_process) [process_unjoined, right=of on_process] {Maske: Schwellwertbildung der \texttt{OFF} Pixel};
+            \end{scope}
+            \path let \p{lowest}=(bus_process.south), \p{parent}=(adapt_process.south) in node (apply_process) [process] at (\x{parent}, \y{lowest}) {Anwendung der Bildmasken};
+            \node [process] {Erodierung vertikaler Kanten};
+            \node [end] {Ende};
+        \end{scope}
+        \draw [connector] (shading_process) -| (on_process);
+        \draw [connector] (shading_process) -| (off_process);
+        \draw [connector] (shading_process) -| (canny_process);
+        \draw [connector] (on_process) |- (apply_process);
+        \draw [connector] (off_process) |- (apply_process);
+        \draw [connector] (bus_process) |- (apply_process);
+    \end{tikzpicture}
+    \caption{Segmentierung und Merkmale von Variante 1.\label{fig:segmentation_var0}}
 \end{figure}
 
 \begin{figure}[ht]
@@ -239,6 +209,24 @@ Mit der beschriebenen Segmentierung und Merkmalsextraktion lässt sich eine \for
 \end{figure}
 
 \subsection{Variante 2}
+
+Die zweite Variante nutzt die gleiche Segmentierung wie in \cref{fig:segmentation_var0}.
+
+Im Merkmalsvektor von Variante 1 wird Umfang nun gegen die Dichte der Kontur getauscht. Der resultierende Merkmalsraum ist in \cref{fig:feature_space_var1} dargestellt. Verglichen mit der Gegenüberstellung von \emph{Fläche zu Umfang} aus \cref{fig:feature_space_var0} zeigt \emph{Fläche zu Dichte} eine bessere Abgrenzung von \defectcrack{} und \defectfinger{}.
+
+Die erzielte \foreignlanguage{english}{Accuracy} beläuft sich auch \SI{90.72}{\percent} bei \(k = 1\) und \SI{85.57}{\percent} bei \(k = 3\). Dies spiegelt sich auch in \cref{fig:confusion_matrix_var1} wider, in der nun allen voran \defectfinger{} Vorhersagen zu den Falscherkennungen beitragen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{images/feature_space_var1.eps}
+    \caption{Merkmalsraum der Variante 2\label{fig:feature_space_var1}}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics{images/confusion_matrix_var1.eps}
+    \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 2\label{fig:confusion_matrix_var1}}
+\end{figure}
 
 \subsection{Variante 3}
 
