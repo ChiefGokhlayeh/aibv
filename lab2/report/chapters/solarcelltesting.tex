@@ -187,7 +187,7 @@ Die Merkmalsextraktion endet mit der Auswahl des Merkmalsvektors mit der größt
         \draw [connector] (off_process) |- (apply_process);
         \draw [connector] (bus_process) |- (apply_process);
     \end{tikzpicture}
-    \caption{Segmentierung und Merkmale von Variante 1.\label{fig:segmentation_var0}}
+    \caption{Segmentierung von Variante 1.\label{fig:segmentation_var0}}
 \end{figure}
 
 \begin{figure}[ht]
@@ -235,6 +235,70 @@ Die erzielte \foreignlanguage{english}{Accuracy} beläuft sich auch \SI{90.72}{\
 \FloatBarrier{}
 
 \subsection{Variante 3}
+
+Im Gegensatz zu Variante 1 wird nun die Segmentierung angepasst. Der Ablauf ist in \cref{fig:segmentation_var2} dargestellt. Die ersten Schritte bis zur Adaptiven Schwellwertbildung und der Busmasken Generierung werden übernommen. Nach der Adaptiven Schwellwertbildung wird nun jedoch ein horizontal orientierter \(3 \times 1\) Gauß-Kernel auf das Grauwertbild appliziert. Anschließend findet eine Median Filterung statt, um Störungen zu reduzieren. Durch die Filterung entstehen weiche Kanten im segmentierten Bild, die mittels globaler Schwellwertbildung abgeschnitten werden. Anders als in Variante 1 wird nur eine Busmaske erzeugt und angewendet. Schließlich findet eine Dilatation und Erosion mit unterschiedlichen Iterationen statt, um die verbleibenden Störungen zu entfernen.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[
+        start/.style={
+                font=\small,
+                draw,
+                very thick,
+                shape=ellipse,
+                text depth=0.35ex,
+                inner sep=0.25cm,
+                on chain,
+            },
+        end/.style={
+                start,
+                join,
+            },
+        process_unjoined/.style={
+                draw,
+                very thick,
+                rounded corners,
+                text width=2.5cm,
+                inner sep=0.25cm,
+                align=center,
+                on chain,
+            },
+        process/.style={
+                process_unjoined,
+                join,
+            },
+        connector/.style={very thick, -{Stealth[]}},
+        every join/.style={connector},
+        ]
+        \begin{scope}[start chain=trunk going below, node distance=5mm]
+            \node [start] {Start};
+            \node [process] {Überbelichtung};
+            \node (shading_process) [process] {Be\-lich\-tungs\-kor\-rek\-tur};
+            \node (adapt_process) [process] {Adaptive Schwellwertbildung};
+            \node [process] {Gaußsche Weichzeichnung};
+            \node [process] {Median Filterung};
+            \node (glob_process) [process] {Globale Schwellwertbildung};
+            \begin{scope}[start branch=canny going below]
+                \node (canny_process) [process_unjoined, right=of adapt_process] {Bus\-leis\-ten-Erkennung mittels Can\-ny Edge-Detector};
+                \node (bus_process) [process] {Maske: Busleisten};
+            \end{scope}
+            \path let \p{lowest}=(glob_process.south), \p{parent}=(glob_process.south) in node (apply_process) [process] at (\x{parent}, \y{lowest}) {Anwendung der Bildmasken};
+            \node [process] {Dilatation \& Erosion};
+            \node [end] {Ende};
+        \end{scope}
+        \draw [connector] (shading_process) -| (canny_process);
+        \draw [connector] (bus_process) |- (apply_process);
+    \end{tikzpicture}
+    \caption{Segmentierung von Variante 3.\label{fig:segmentation_var2}}
+\end{figure}
+
+Mit einer \foreignlanguage{english}{Accuracy} von \SI{92.78}{\percent} bei \(k = 1\) schneidet diese Variante sehr positiv ab. Auch hier verringert sich die \foreignlanguage{english}{Accuracy} auf \SI{81.44}{\percent} bei \(k = 3\). Die \foreignlanguage{english}{Confusion Matrix} in \cref{fig:confusion_matrix_var2} deutet primär auf verbleibende Verwechslungen der \defectok{} und \defectfinger{} Klassen hin.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics{images/confusion_matrix_var2.eps}
+    \caption{\foreignlanguage{english}{Confusion Matrix} der Variante 3\label{fig:confusion_matrix_var2}}
+\end{figure}
 
 \FloatBarrier{}
 
