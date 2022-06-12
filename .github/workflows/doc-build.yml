@@ -1,0 +1,16 @@
+name: doc-build
+
+on: [push, pull_request]
+
+jobs:
+    doc_build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.devcontainer
+              with:
+                  args: latexmk -cd -pdf -interaction=nonstopmode -file-line-error lab2/report/main.tex
+            - uses: actions/upload-artifact@v3
+              with:
+                  name: Lab 2 - Report
+                  path: lab2/report/main.pdf
