@@ -6,6 +6,10 @@ jobs:
     doc_build:
         runs-on: ubuntu-latest
         steps:
+            - name: Remove unused packages from disk
+              run: |
+                  sudo rm -rf /usr/local/lib/android
+                  sudo rm -rf /usr/share/dotnet
             - uses: actions/checkout@v3
             - uses: ./.devcontainer
               with:
