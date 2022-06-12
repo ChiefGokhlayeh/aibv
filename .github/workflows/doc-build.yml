@@ -10,16 +10,24 @@ jobs:
               run: |
                   sudo rm -rf /usr/local/lib/android
                   sudo rm -rf /usr/share/dotnet
-            - uses: docker/login-action@v2
+            - name: Login to DockerHub
+              uses: docker/login-action@v2
               with:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
-            - uses: actions/checkout@v3
-            - uses: devcontainers/ci@v0.2
+            - name: Checkout repository
+              uses: actions/checkout@v3
+            - name: Patch runArgs in devcontainer.json
+              run: |
+                  sed -i '/"runArgs"\s*:\s*\[/,/]/d' .devcontainer/devcontainer.json
+                  sed -i '/"postCreateCommand"\s*:/,/,/d' .devcontainer/devcontainer.json
+            - name: Build LaTeX document inside devcontainer
+              uses: devcontainers/ci@v0.2
               with:
                   imageName: registry.hub.docker.com/${{ secrets.DOCKERHUB_USERNAME }}/aibv-devcontainer
                   runCmd: latexmk -cd -pdf -interaction=nonstopmode -file-line-error lab2/report/main.tex
-            - uses: actions/upload-artifact@v3
+            - name: Upload Lab 2 Report
+              uses: actions/upload-artifact@v3
               with:
                   name: Lab 2 - Report
                   path: lab2/report/main.pdf
