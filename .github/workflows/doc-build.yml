@@ -17,6 +17,8 @@ jobs:
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
             - name: Checkout repository
               uses: actions/checkout@v3
+              with:
+                  lfs: true
             - name: Patch runArgs in devcontainer.json
               run: |
                   sed -i '/"runArgs"\s*:\s*\[/,/]/d' .devcontainer/devcontainer.json
