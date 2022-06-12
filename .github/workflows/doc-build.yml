@@ -15,7 +15,6 @@ jobs:
               with:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
-                  logout: false
             - name: Checkout repository (incl. LFS files)
               uses: nschloe/action-cached-lfs-checkout@v1
             - name: Patch runArgs in devcontainer.json
@@ -27,6 +26,7 @@ jobs:
               with:
                   imageName: registry.hub.docker.com/${{ secrets.DOCKERHUB_USERNAME }}/aibv-devcontainer
                   runCmd: latexmk -cd -pdf -interaction=nonstopmode -file-line-error lab2/report/main.tex
+                  push: "never"
             - name: Upload Lab 2 Report
               uses: actions/upload-artifact@v3
               with:
