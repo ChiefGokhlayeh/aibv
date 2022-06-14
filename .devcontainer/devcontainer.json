@@ -40,7 +40,7 @@
         "valentjn.vscode-ltex"
     ],
 
-    "postCreateCommand": "pre-commit install && nbstripout install && sudo /opt/conda/condabin/mamba install -y -c conda-forge -n base tensorflow-gpu",
+    "postCreateCommand": "pre-commit install && nbstripout install && if ls /dev | grep nvidia > /dev/null; then sudo /opt/conda/condabin/mamba install -y -c conda-forge -n base tensorflow-gpu; fi",
 
     "remoteUser": "vscode",
 
