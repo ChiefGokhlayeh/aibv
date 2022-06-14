@@ -6,7 +6,7 @@
 
 Applied Industrial Image Processing course at University of Applied Sciences Hamburg. Contains lab exercises and reports.
 
--   Labor 1: **Image Processing Hardware**
--   Labor 2: **Solar Cell Testing**
--   Labor 3: **Excursion** (no exercises or report)
--   Labor 4: **Deep Learning for Solar Cell Inspection with CNN**
+-   Lab 1: **Image Processing Hardware**
+-   Lab 2: **Solar Cell Testing**
+-   Lab 3: **Excursion** (no exercises or report)
+-   Lab 4: **Deep Learning for Solar Cell Inspection with CNN**
