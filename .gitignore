@@ -1,6 +1,8 @@
+*.h5
 /data/multilabel
 /data/multilabel_small
-*.h5
+/workshop/tobelabeled/*_from_json.jpg
+/workshop/tobelabeled/*.png
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,python,jupyternotebooks
