@@ -6,7 +6,7 @@ repos:
           - id: check-yaml
           - id: detect-private-key
           - id: end-of-file-fixer
-            exclude: '.*\.ipynb'
+            exclude: '(.*\.ipynb|workshop\/tobelabeled\/.*\.json)'
           - id: trailing-whitespace
     - repo: https://github.com/psf/black
       rev: 22.6.0
@@ -31,6 +31,7 @@ repos:
           - id: prettier
             args:
                 - --config-precedence=file-override
+            exclude: 'workshop\/tobelabeled\/.*\.json'
     - repo: https://github.com/kynan/nbstripout
       rev: 0.6.0
       hooks:
