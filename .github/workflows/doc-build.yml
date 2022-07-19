@@ -17,6 +17,8 @@ jobs:
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
             - name: Checkout repository (incl. LFS files)
               uses: nschloe/action-cached-lfs-checkout@v1
+              with:
+                  include: "lab2/report/images/*,lab2/report/logo/*"
             - name: Patch runArgs in devcontainer.json
               run: |
                   sed -i '/"runArgs"\s*:\s*\[/,/]/d' .devcontainer/devcontainer.json
